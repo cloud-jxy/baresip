@@ -185,7 +185,7 @@ int config_parse_conf(struct config *cfg, const struct conf *conf)
 	struct pl pollm, as, ap;
 	enum poll_method method;
 	struct vidsz size = {0, 0};
-	struct pl fmt, txmode;
+	struct pl txmode;
 	uint32_t v;
 	int err = 0;
 
@@ -263,31 +263,8 @@ int config_parse_conf(struct config *cfg, const struct conf *conf)
 
 	(void)conf_get_bool(conf, "audio_level", &cfg->audio.level);
 
-	if (0 == conf_get(conf, "ausrc_format", &fmt)) {
-
-		cfg->audio.src_fmt = resolve_aufmt(&fmt);
-		if (cfg->audio.src_fmt == -1) {
-			warning("ausrc_format: sample format not supported"
-				" (%r)\n", &fmt);
-			return EINVAL;
-		}
-
-		info("ausrc: using audio sample format `%s'\n",
-		     aufmt_name(cfg->audio.src_fmt));
-	}
-
-	if (0 == conf_get(conf, "auplay_format", &fmt)) {
-
-		cfg->audio.play_fmt = resolve_aufmt(&fmt);
-		if (cfg->audio.play_fmt == -1) {
-			warning("auplay_format: audio format not supported"
-				" (%r)\n", &fmt);
-			return EINVAL;
-		}
-
-		info("auplay: using audio sample format `%s'\n",
-		     aufmt_name(cfg->audio.play_fmt));
-	}
+	conf_get_aufmt(conf, "ausrc_format", &cfg->audio.src_fmt);
+	conf_get_aufmt(conf, "auplay_format", &cfg->audio.play_fmt);
 
 	conf_get_aufmt(conf, "auenc_format", &cfg->audio.enc_fmt);
 	conf_get_aufmt(conf, "audec_format", &cfg->audio.dec_fmt);
