@@ -979,12 +979,10 @@ static void ua_event_handler(struct ua *ua, enum ua_event ev,
 		/* stop any ringtones */
 		menu.play = mem_deref(menu.play);
 
-		if(menu.ringback_disabled)
-		{
+		if (menu.ringback_disabled) {
 			info("\nRingback disabled\n");
 		}
-		else
-		{
+		else {
 			(void)play_file(&menu.play, player,
 					"ringback.wav",-1);
 		}
@@ -1084,7 +1082,8 @@ static int module_init(void)
 	 * Read the config values
 	 */
 	conf_get_bool(conf_cur(), "menu_bell", &menu.bell);
-	conf_get_bool(conf_cur(), "ringback_disabled", &menu.ringback_disabled);
+	conf_get_bool(conf_cur(), "ringback_disabled",
+		      &menu.ringback_disabled);
 
 	if (0 == conf_get(conf_cur(), "redial_attempts", &val) &&
 	    0 == pl_strcasecmp(&val, "inf")) {
