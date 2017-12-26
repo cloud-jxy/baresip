@@ -144,6 +144,8 @@ endif
 LIBS      += -lrem -lm
 LIBS      += -L$(SYSROOT)/lib
 
+LIBS      += -lavdevice -lavformat -lavfilter -lavcodec -lavutil -lswscale -lswresample -lswscale -lm -lc
+
 ifeq ($(OS),win32)
 TEST_LIBS += -static-libgcc
 endif
