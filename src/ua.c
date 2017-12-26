@@ -86,6 +86,10 @@ static int  ua_call_alloc(struct call **callp, struct ua *ua,
 			  enum vidmode vidmode, const struct sip_msg *msg,
 			  struct call *xcall, const char *local_uri);
 
+extern event g_ev;
+void set_event(event e) {
+	g_ev = e;
+}
 
 /* This function is called when all SIP transactions are done */
 static void exit_handler(void *arg)
@@ -120,6 +124,10 @@ void ua_event(struct ua *ua, enum ua_event ev, struct call *call,
 	struct le *le;
 	char buf[256];
 	va_list ap;
+
+	if (g_ev) {
+		g_ev(ev, call);
+	}
 
 	va_start(ap, fmt);
 	(void)re_vsnprintf(buf, sizeof(buf), fmt, ap);
@@ -233,6 +241,35 @@ void ua_unregister(struct ua *ua)
 	}
 }
 
+void ua_account_unreg(char * aor) {
+	struct le *le;
+
+	for (le = list_head(uag_list()); le; le = le->next) {
+		const struct ua *ua = le->data;
+
+		if (!ua) {
+			continue;
+		}
+
+		if (0 == str_cmp(aor, ua->acc->aor)) {
+			ua_unregister(ua);
+		}
+	}
+}
+
+void ua_accounts_unreg() {
+	struct le *le;
+
+	for (le = list_head(uag_list()); le; le = le->next) {
+		const struct ua *ua = le->data;
+
+		if (!ua) {
+			continue;
+		}
+
+		ua_unregister(ua);
+	}
+}
 
 bool ua_isregistered(const struct ua *ua)
 {
@@ -253,6 +290,25 @@ bool ua_isregistered(const struct ua *ua)
 	return false;
 }
 
+bool is_reg(char *aor)
+{
+	struct le *le;
+	bool ret = false;
+
+	for (le = list_head(uag_list()); le; le = le->next) {
+		const struct ua *ua = le->data;
+
+		if (!ua) {
+			continue;
+		}
+
+		if (0 == str_cmp(aor, ua->acc->aor)) {
+			ret = ua_isregistered(ua);
+		}
+	}
+
+	return ret;
+}
 
 static struct call *ua_find_call_onhold(const struct ua *ua)
 {
@@ -905,6 +961,19 @@ int ua_print_status(struct re_printf *pf, const struct ua *ua)
 	return err;
 }
 
+// int get_scode(const struct ua *ua) {
+// 	struct le *le;
+// 	int ret;
+
+// 	// err = re_hprintf(pf, "%-42s", ua->acc->aor);
+
+// 	for (le = ua->regl.head; le; le = le->next) {
+// 		const struct reg *reg = (struct reg*)le->data;
+// 		ret = reg->scode;
+// 	}
+
+// 	return ret;
+// }
 
 /**
  * Send SIP OPTIONS message to a peer
@@ -1940,6 +2009,22 @@ void uag_set_sub_handler(sip_msg_h *subh)
 void uag_current_set(struct ua *ua)
 {
 	uag.ua_cur = ua;
+}
+
+int ua_set_current_account(char * aor) {
+	struct le *le;
+
+	for (le = list_head(uag_list()); le; le = le->next) {
+		const struct ua *ua = le->data;
+
+		if (!ua) {
+			continue;
+		}
+
+		if (0 == str_cmp(aor, ua->acc->aor)) {
+			uag_current_set(ua);
+		}
+	}
 }
 
 

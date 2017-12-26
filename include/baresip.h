@@ -691,6 +691,7 @@ int  cmd_process_long(struct commands *commands, const char *str, size_t len,
 int cmd_print(struct re_printf *pf, const struct commands *commands);
 const struct cmd *cmd_find_long(const struct commands *commands,
 				const char *name);
+const struct cmd * cmd_find_by_key(const struct commands *commands, char key);
 
 
 /*
@@ -1108,6 +1109,56 @@ struct network *baresip_network(void);
 struct contacts *baresip_contacts(void);
 struct commands *baresip_commands(void);
 
+
+/*
+jxy
+*/
+typedef void (*event) (enum ua_event ev, struct call *call);
+event g_ev;
+void set_event(event e);
+
+char * get_local_uri(struct call * call);
+char * get_peer_uri(struct call * call);
+time_t get_time_start(struct call * call);
+time_t get_time_stop(struct call * call);
+time_t get_time_conn(struct call * call);
+
+/** Call States */
+/* remove it from call.c to here */
+enum state {
+	STATE_IDLE = 0,
+	STATE_INCOMING,
+	STATE_OUTGOING,
+	STATE_RINGING,
+	STATE_EARLY,
+	STATE_ESTABLISHED,
+	STATE_TERMINATED
+};
+enum state get_call_status(const struct call *call);
+
+const char * play_get_path();
+
+/** Register client */
+/* remove it from reg.c to here */
+struct reg {
+	struct le le;                /**< Linked list element                */
+	struct ua *ua;               /**< Pointer to parent UA object        */
+	struct sipreg *sipreg;       /**< SIP Register client                */
+	int id;                      /**< Registration ID (for SIP outbound) */
+
+	/* status: */
+	uint16_t scode;              /**< Registration status code           */
+	char *srv;                   /**< SIP Server id                      */
+	int sipfd;                   /**< Cached file-descr. for SIP conn    */
+	int af;                      /**< Cached address family for SIP conn */
+};
+
+bool is_reg(char * aor);
+
+void ua_account_unreg(char * aor);
+void ua_accounts_unreg();
+
+int ua_set_current_account(char * aor);
 
 #ifdef __cplusplus
 }

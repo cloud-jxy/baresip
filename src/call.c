@@ -27,16 +27,17 @@ enum {
 };
 
 
-/** Call States */
-enum state {
-	STATE_IDLE = 0,
-	STATE_INCOMING,
-	STATE_OUTGOING,
-	STATE_RINGING,
-	STATE_EARLY,
-	STATE_ESTABLISHED,
-	STATE_TERMINATED
-};
+/* remote to baresip.h */
+// /** Call States */
+// enum state {
+// 	STATE_IDLE = 0,
+// 	STATE_INCOMING,
+// 	STATE_OUTGOING,
+// 	STATE_RINGING,
+// 	STATE_EARLY,
+// 	STATE_ESTABLISHED,
+// 	STATE_TERMINATED
+// };
 
 /** SIP Call Control object */
 struct call {
@@ -83,6 +84,53 @@ struct call {
 	uint32_t linenum;         /**< Line number from 1 to N              */
 };
 
+char * get_local_uri(struct call * call) {
+	if (call) {
+		return call->local_uri;
+	} else {
+		return NULL;
+	}
+}
+
+char * get_peer_uri(struct call * call) {
+	if (call) {
+		return call->peer_uri;
+	} else {
+		return NULL;
+	}
+}
+
+time_t get_time_start(struct call * call)  {
+	if (call) {
+		return call->time_start;
+	} else {
+		return 0;
+	}
+}
+
+time_t get_time_stop(struct call * call)  {
+	if (call) {
+		return call->time_stop;
+	} else {
+		return 0;
+	}
+}
+
+time_t get_time_conn(struct call * call)  {
+	if (call) {
+		return call->time_conn;
+	} else {
+		return 0;
+	}
+}
+
+enum state get_call_status(const struct call *call) {
+	if (call) {
+		return call->state;
+	} else {
+		return 0;
+	}
+}
 
 static int send_invite(struct call *call);
 

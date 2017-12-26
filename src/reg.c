@@ -8,19 +8,19 @@
 #include "core.h"
 
 
-/** Register client */
-struct reg {
-	struct le le;                /**< Linked list element                */
-	struct ua *ua;               /**< Pointer to parent UA object        */
-	struct sipreg *sipreg;       /**< SIP Register client                */
-	int id;                      /**< Registration ID (for SIP outbound) */
+// /** Register client */
+// struct reg {
+// 	struct le le;                /**< Linked list element                */
+// 	struct ua *ua;               /**< Pointer to parent UA object        */
+// 	struct sipreg *sipreg;       /**< SIP Register client                */
+// 	int id;                      *< Registration ID (for SIP outbound) 
 
-	/* status: */
-	uint16_t scode;              /**< Registration status code           */
-	char *srv;                   /**< SIP Server id                      */
-	int sipfd;                   /**< Cached file-descr. for SIP conn    */
-	int af;                      /**< Cached address family for SIP conn */
-};
+// 	/* status: */
+// 	uint16_t scode;              /**< Registration status code           */
+// 	char *srv;                   /**< SIP Server id                      */
+// 	int sipfd;                   /**< Cached file-descr. for SIP conn    */
+// 	int af;                      /**< Cached address family for SIP conn */
+// };
 
 
 static void destructor(void *arg)
@@ -286,7 +286,6 @@ int reg_debug(struct re_printf *pf, const struct reg *reg)
 
 	return err;
 }
-
 
 int reg_status(struct re_printf *pf, const struct reg *reg)
 {

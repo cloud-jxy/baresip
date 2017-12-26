@@ -92,7 +92,7 @@ static struct cmds *cmds_find(const struct commands *commands,
 }
 
 
-static const struct cmd *cmd_find_by_key(const struct commands *commands,
+const struct cmd *cmd_find_by_key(const struct commands *commands,
 					 char key)
 {
 	struct le *le;

@@ -324,3 +324,7 @@ void play_set_path(const char *path)
 {
 	str_ncpy(play_path, path, sizeof(play_path));
 }
+
+const char * play_get_path() {
+	return play_path;
+}
