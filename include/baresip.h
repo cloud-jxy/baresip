@@ -1160,6 +1160,29 @@ void ua_accounts_unreg();
 
 int ua_set_current_account(char * aor);
 
+/*
+	add by Xueyun jiang
+*/
+struct vidisp_cb {
+	vidisp_alloc_h *alloc;
+	vidisp_update_h *update;
+	vidisp_disp_h *disp;
+	vidisp_hide_h *hide;
+};
+
+void set_vidisp_cb(struct vidisp_cb cb);
+struct vidisp_cb get_vidisp_cb();
+
+
+struct vidsrc_cb {
+	vidsrc_alloc_h *alloc;
+	vidsrc_update_h *update;
+};
+
+void set_vidsrc_cb(struct vidsrc_cb cb);
+struct vidsrc_cb get_vidsrc_cb();
+
+
 #ifdef __cplusplus
 }
 #endif
